@@ -20,13 +20,17 @@ public class TestServlet extends HttpServlet {
 		PrintWriter pw = response.getWriter();
 		int num1 = Integer.parseInt(request.getParameter("num1"));
 		int num2 = Integer.parseInt(request.getParameter("num2"));
-		String add = request.getParameter("add");
-		String sub = request.getParameter("sub");
-		if("더하기".equals(add)) {
-			pw.print(num1+num2);
-		}else if("빼기".equals(sub)) {
-			pw.print(num1-num2);
+		String op = request.getParameter("op");
+		if("더하기".equals(op)) {
+			pw.print(num1 + num2);
+		}else if("빼기".equals(op)) {
+			pw.print(num1 - num2);
+		}else if("곱하기".equals(op)) {
+			pw.print(num1 * num2);
+		}else if("나누기".equals(op)) {
+			pw.print(num1 / num2);
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

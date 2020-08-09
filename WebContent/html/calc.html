@@ -5,44 +5,33 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
-	num1 :<input type="number" id="num1">
-	num2 :<input type="number" id="num2">
-	<button onclick="add()" id="add" value="더하기">+</button>
-	<button onclick="sub()" id="sub" value="빼기">-</button>
+<form>
+	num1 : <input type="number" id="num1"><br>
+	num2 : <input type="number" id="num2">
+	<input type="reset">
+</form>
+	<button onclick="caculate(this.value)" value="더하기">더하기</button>
+	<button onclick="caculate(this.value)" value="빼기">빼기</button>
+	<button onclick="caculate(this.value)" value="곱하기">곱하기</button>
+	<button onclick="caculate(this.value)" value="나누기">나누기</button>
 	<br>
 	<div id="rDiv"></div>
 	<script>
-		function add() {
+		function caculate(clicked_value) {
 			var xhr = new XMLHttpRequest();
 			var num1 = document.querySelector('#num1').value;
 			var num2 = document.querySelector('#num2').value;
-			var add = document.querySelector('#add').value;
-			xhr.open('GET', '/calc?&num1=' + num1 + '&num2=' + num2 + '&add=' + add);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4) {
-					document.querySelector('#rDiv').innerText = '결과 : '
-							+ xhr.responseText;
-				}
-			}
-			xhr.send();
-		}
-		function sub() {
-			var xhr = new XMLHttpRequest();
-			var num1 = document.querySelector('#num1').value;
-			var num2 = document.querySelector('#num2').value;
-			var sub = document.querySelector('#sub').value;
-			xhr.open('GET', '/calc?&num1=' + num1 + '&num2=' + num2 + '&sub' + sub);
 
+			xhr.open('GET', '/calc?&num1=' + num1 + '&num2=' + num2 + '&op=' + clicked_value);
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState == 4) {
+					
 					document.querySelector('#rDiv').innerText = '결과 : '
-							+ xhr.responseText;
+							+ xhr.responseText
 				}
 			}
 			xhr.send();
 		}
-		
 	</script>
 </body>
 </html>
