@@ -10,7 +10,7 @@ public class Conn {
 	
 	static {
 		try {
-			Class.forName("oracle.jdbc.drivet.OracleDriver");
+			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
