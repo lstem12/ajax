@@ -1,0 +1,160 @@
+
+create table member_info(
+num number not null,
+name varchar2(100) not null,
+id varchar2(100) not null,
+sido varchar2(80) not null
+);
+alter table member_info
+add primary key(num);
+
+select * from member_info;
+
+create SEQUENCE seq_member_info_num;
+
+select seq_member_info_num.nextval from dual;
+
+insert into member_info(num, name, id, sido)
+values(seq_member_info_num.nextval, '최원준', 'test', '서울');
+
+update member_info
+set sido='부산'
+where num=2;
+
+commit;
+
+select * from member_info
+where sido like '부%';
+
+select * from user_tables;
+select * from user_catalog;
+
+
+
+select * from member_info;
+
+create index idx_member_info_sido
+
+
+drop index idx_member_info_sido;
+
+select count(1) as cnt, sido from member_info
+group by sido;
+
+create view v_member_info_cnt
+as 
+select count(1) as cnt, sido from member_info
+group by sido;
+
+select * from v_member_info_cnt;
+
+drop view v_member_info_cnt;
+
+select * from select_address;
+
+call prd_loop_test(10);
+
+create table sido_count(
+sido varchar2(120) not null,
+cnt number(8,0) not null
+);
+
+call prd_insert_sido_count();
+
+select * from sido_count;
+
+
+
+create or replace procedure prd_if_test(p_sido varchar2)
+IS
+BEGIN
+	dbms_output.put_line('프로시져 시작');
+	if p_sido='서울' then
+		dbms_output.put_line('서울을 입력했군요');
+	elsif p_sido='경기' then
+		dbms_output.put_line('경기를 입력했군요');
+	ELSE
+		dbms_output.put_line('서울을 입력하지 않았군요');
+	end if;
+	dbms_output.put_line('프로시져 종료');
+end;
+
+
+
+
+create or REPLACE procedure prd_loop_test(p_max_num number)
+IS
+	v_num number :=1;
+BEGIN
+	loop
+		exit when v_num>p_max_num;
+		dbms_output.put_line('v_num : ' || v_num);
+		v_num := v_num + 1;
+	end loop;
+end;
+
+
+
+
+CREATE OR REPLACE procedure prd_loop(p_max_num number)
+IS
+	v_sum number := 0;
+	v_idx number := 0;
+BEGIN
+	for v_idx in 1..p_max_num loop
+		v_sum := v_sum + v_idx;
+	end loop;
+		dbms_output.put_line(v_sum);
+end;
+
+
+
+
+create or replace procedure prd_incress_sal(p_emp_no number, p_rate number)
+IS
+	v_sal number :=0;
+begin
+	select SAL
+	into v_sal
+	from emp where empno=p_emp_no;
+	v_sal := v_sal * p_rate;
+	
+	update EMP
+	set sal = v_sal
+	where empno=p_emp_no;
+end;
+
+
+
+
+
+
+create or REPLACE procedure prd_sido_insert_cnt
+Is
+	CURSOR cur_address
+	is
+	select sido, count(1) as cnt from address group by sido;
+	row_sido sido_count%rowtype;
+	v_cnt number :=0;
+begin
+	open cur_address;
+	loop
+		fetch cur_address into row_sido;
+		exit when cur_address%notfound;
+		select count(1)
+		into v_cnt
+		from sido_count
+		where sido = row_sido.sido;
+		
+		if v_cnt=0 THEN
+			insert into sido_count(sido, cnt)
+			values(row_sido.sido, row_sido.cnt);
+		ELSE
+			update sido_count
+			set cnt = row_sido.cnt
+			where sido=row_sido.sido;
+			end if;
+			dbms_output.put_line(row_sido.sido || ',' || row_sido.cnt);
+	end loop;
+	close cur_address;
+end;
