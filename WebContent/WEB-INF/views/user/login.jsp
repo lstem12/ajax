@@ -17,8 +17,11 @@
 		<td><input type="password" id="pwd"></td>
 	</tr>
 	<tr>
-		<th colspan="2"><button onclick="doLogin()">로그인</button></th>
+		<th colspan="2"><button onclick="doLogin()">로그인</button>
+		<button onclick="location.href='/views/user/join';">회원가입</button>
+		</th>
 	</tr>
+	
 </table>
 <script>
 function doLogin(){

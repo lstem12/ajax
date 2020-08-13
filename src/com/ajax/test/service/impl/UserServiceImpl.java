@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
 		Map<String, Object> rMap = new HashMap<>();
 		rMap.put("result", result);
 		rMap.put("msg", "가입실패");
+		rMap.put("url", "/views/user/join");
 		if(result==1) {
 			rMap.put("msg", "가입성공");
 			rMap.put("url", "/views/user/login");

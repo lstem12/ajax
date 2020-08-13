@@ -64,20 +64,32 @@ public class UserServlet extends HttpServlet {
 			response.getWriter().append(gson.toJson(rMap));
 		}else if("join".equals(cmd)) {
 			String uiId = request.getParameter("ui_id");
-			if(uiId==null || uiId.trim().length()<4) {
+			if(uiId==null || uiId.trim().length()<4 || uiId.trim().length()>20) {
 				throw new ServletException("올바르지 않은 아이디!");
 			}
 			String uiPassword = request.getParameter("ui_password");
-			if(uiPassword==null || uiPassword.trim().length()<8) {
+			if(uiPassword==null || uiPassword.trim().length()<8 || uiPassword.trim().length()>15) {
 				throw new ServletException("올바르지 않은 비밀번호!");
 			}
 			String uiName = request.getParameter("ui_name");
+			if(uiName==null || uiName.trim().length()<2 || uiName.trim().length()>10) {
+				throw new ServletException("올바르지 않은 이름!");
+			}
 			int uiAge = Integer.parseInt(request.getParameter("ui_age"));
+			if(uiAge==0 || uiAge>130) {
+				throw new ServletException("올바르지 않은 나이!");
+			}
 			String uiBirth = request.getParameter("ui_birth");
+			if(uiBirth == null) {
+				throw new ServletException("올바르지 않은 생년월일!");
+			}
 			uiBirth = uiBirth.replace("-", "");
 			String uiPhone = request.getParameter("ui_phone");
 			String uiEmail = request.getParameter("ui_email");
 			String uiNickName = request.getParameter("ui_nickname");
+			if(uiNickName == null || uiNickName.trim().length()<4 || uiNickName.trim().length()>30) {
+				throw new ServletException("올바르지 않은 닉네임!");
+			}
 			Map<String,Object> user = new HashMap<>();
 			user.put("ui_id", uiId);
 			user.put("ui_password", uiPassword);
