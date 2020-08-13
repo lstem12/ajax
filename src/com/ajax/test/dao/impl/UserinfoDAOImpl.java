@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.ajax.test.common.Conn;
 import com.ajax.test.dao.UserinfoDAO;
+import com.ajax.test.servlet.InitServlet;
 
 public class UserinfoDAOImpl implements UserinfoDAO {
 
@@ -20,8 +21,9 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 		PreparedStatement ps = null;
 		int result = 0;
 		try {
-			con = Conn.open();
-			String sql = "insert into user_info(ui_num, ui_name,ui_age, ui_birth, ui_id, ui_password, ui_phone,ui_email, ui_credat, ui_nickname) values(seq_ui_num.nextval,?,?,?,?,?,?,?,sysdate,?)";
+			con = InitServlet.getConnection();
+			String sql = "insert into user_info(ui_num, ui_name,ui_age, ui_birth, ui_id, ui_password, ui_phone,ui_email, ui_credat, ui_nickname) "
+					+ "values(seq_ui_num.nextval,?,?,?,?,?,?,?,sysdate,?)";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, userInfo.get("ui_name").toString());
 			ps.setInt(2, (int) userInfo.get("ui_age"));
@@ -37,7 +39,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				Conn.close(con, ps);
+				InitServlet.close(ps, con);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -51,7 +53,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 		PreparedStatement ps = null;
 		int result = 0;
 		try {
-			con = Conn.open();
+			con = InitServlet.getConnection();
 			String sql = "delete from user_info where ui_num=?";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, (int) userInfo.get("ui_num"));
@@ -61,7 +63,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				Conn.close(con, ps);
+				InitServlet.close(ps, con);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -76,7 +78,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 		PreparedStatement ps = null;
 		int result = 0;
 		try {
-			con = Conn.open();
+			con = InitServlet.getConnection();
 			String sql = "update user_info set ui_name=?, ui_age=?, ui_birth=?, ui_password=?,"
 					+ " ui_phone=?, ui_email=?, ui_nickname=? where ui_num=?";
 			ps = con.prepareStatement(sql);
@@ -94,7 +96,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				Conn.close(con, ps);
+				InitServlet.close(ps, con);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -108,7 +110,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = Conn.open();
+			con = InitServlet.getConnection();
 			String sql = "select ui_num, ui_name, ui_age, ui_birth, ui_id, ui_password,"
 					+ " ui_phone, ui_email, ui_credat, ui_nickname "
 					+ "from user_info where ui_num=?";
@@ -133,7 +135,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				Conn.close(con, ps, rs);
+				InitServlet.close(rs, ps, con);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -148,7 +150,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = Conn.open();
+			con = InitServlet.getConnection();
 			String sql = "select ui_num, ui_name, ui_age, ui_birth, ui_id, ui_password,"
 					+ " ui_phone, ui_email, ui_credat, ui_nickname from user_info";
 			ps = con.prepareStatement(sql);
@@ -172,14 +174,53 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				Conn.close(con, ps, rs);
+				InitServlet.close(rs, ps, con);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return null;
 	}
-
+	
+	@Override
+	public Map<String, Object> selectUserInfoByUiId(String uiId) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = InitServlet.getConnection();
+			String sql = "select ui_num, ui_name, ui_age, ui_birth, ui_id, ui_password,"
+					+ " ui_phone, ui_email, ui_credat, ui_nickname "
+					+ "from user_info where ui_id=?";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, uiId);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				Map<String, Object> rMap = new HashMap<>();
+				rMap.put("ui_num", rs.getInt("ui_num"));
+				rMap.put("ui_name", rs.getString("ui_name"));
+				rMap.put("ui_age", rs.getInt("ui_age"));
+				rMap.put("ui_birth", rs.getString("ui_birth"));
+				rMap.put("ui_id", rs.getString("ui_id"));
+				rMap.put("ui_password", rs.getString("ui_password"));
+				rMap.put("ui_phone", rs.getString("ui_phone"));
+				rMap.put("ui_email", rs.getString("ui_email"));
+				rMap.put("ui_credat", rs.getString("ui_credat"));
+				rMap.put("ui_nickname", rs.getString("ui_nickname"));
+				return rMap;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				InitServlet.close(rs, ps, con);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		Map<String, Object> map = new HashMap<>();
 		UserinfoDAO userinfoDao = new UserinfoDAOImpl();
@@ -212,5 +253,7 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 //		userinfoDao.updateUserInfo(map);
 
 	}
+
+
 
 }

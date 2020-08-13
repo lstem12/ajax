@@ -124,7 +124,8 @@ begin
 	where empno=p_emp_no;
 end;
 
-
+erd 만드는법
+인덱스 생성하는법
 
 
 

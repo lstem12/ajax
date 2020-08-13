@@ -1,5 +1,6 @@
 package com.ajax.test.common;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,24 +26,6 @@ public class Conn {
 		}
 		return null;
 	}
-	public static void close(ResultSet rs) {
-		if(rs!=null) {
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	public static void close(PreparedStatement ps) {
-		if(ps!=null) {
-			try {
-				ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 	public static void close(Connection con) {
 		if(con!=null) {
 			try {
@@ -52,14 +35,15 @@ public class Conn {
 			}
 		}
 	}
-	public static void close(Connection con, PreparedStatement ps) {
-		close(ps);
-		close(con);
+	public static void close(CallableStatement cs) {
+		if(cs!=null) {
+			try {
+				cs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	public static void close(Connection con, PreparedStatement ps, ResultSet rs) {
-		close(rs);
-		close(ps);
-		close(con);
-	}
+	
 	
 }

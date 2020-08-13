@@ -5,4 +5,5 @@ import java.util.Map;
 public interface UserService {
 
 	Map<String,String> doLogin(Map<String,String> user);
+	Map<String,Object> joinUserInfo(Map<String,Object> user);
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -53,6 +54,32 @@ public class UserServlet extends HttpServlet {
 			Map<String,String> rMap = new HashMap<>();
 			rMap.put("msg", "로그아웃 되었습니다.");
 			response.getWriter().append(gson.toJson(rMap));
+		}else if("join".equals(cmd)) {
+			String uiId = request.getParameter("ui_id");
+			if(uiId==null || uiId.trim().length()<4) {
+				throw new ServletException("올바르지 않은 아이디!");
+			}
+			String uiPassword = request.getParameter("ui_password");
+			String uiName = request.getParameter("ui_name");
+			int uiAge = Integer.parseInt(request.getParameter("ui_age"));
+			String uiBirth = request.getParameter("ui_birth");
+			uiBirth = uiBirth.replace("-", "");
+			String uiPhone = request.getParameter("ui_phone");
+			String uiEmail = request.getParameter("ui_email");
+			String uiNickName = request.getParameter("ui_nickname");
+			Map<String,Object> user = new HashMap<>();
+			user.put("ui_id", uiId);
+			user.put("ui_password", uiPassword);
+			user.put("ui_name", uiName);
+			user.put("ui_age", uiAge);
+			user.put("ui_birth", uiBirth);
+			user.put("ui_phone", uiPhone);
+			user.put("ui_email", uiEmail);
+			user.put("ui_nickname", uiNickName);
+			Map<String, Object> rMap = userService.joinUserInfo(user);
+			request.setAttribute("rMap", rMap);
+			RequestDispatcher rd = request.getRequestDispatcher("/views/common/msg");
+			rd.forward(request, response);
 		}
 	}
 
