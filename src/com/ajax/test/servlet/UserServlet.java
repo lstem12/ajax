@@ -2,6 +2,7 @@ package com.ajax.test.servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,14 @@ public class UserServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		int idx = request.getRequestURI().lastIndexOf("/")+1;
+		String cmd = request.getRequestURI().substring(idx);
+		PrintWriter pw = response.getWriter();
+		if("checkid".equals(cmd)) {
+			String uiId = request.getParameter("ui_id");
+			Map<String,String> rMap = userService.checkId(uiId);
+			pw.println(gson.toJson(rMap));
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -60,6 +68,9 @@ public class UserServlet extends HttpServlet {
 				throw new ServletException("올바르지 않은 아이디!");
 			}
 			String uiPassword = request.getParameter("ui_password");
+			if(uiPassword==null || uiPassword.trim().length()<8) {
+				throw new ServletException("올바르지 않은 비밀번호!");
+			}
 			String uiName = request.getParameter("ui_name");
 			int uiAge = Integer.parseInt(request.getParameter("ui_age"));
 			String uiBirth = request.getParameter("ui_birth");

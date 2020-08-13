@@ -71,7 +71,9 @@ public class InitServlet extends HttpServlet {
 	public static final Connection getConnection() {
 		String jdbcDriver = "jdbc:apache:commons:dbcp:jwc";
 		try {
-			return DriverManager.getConnection(jdbcDriver);
+			Connection con = DriverManager.getConnection(jdbcDriver);
+			con.setAutoCommit(false);
+			return con;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

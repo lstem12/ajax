@@ -32,9 +32,21 @@ public class UserServiceImpl implements UserService {
 		rMap.put("msg", "가입실패");
 		if(result==1) {
 			rMap.put("msg", "가입성공");
-			rMap.put("url", "/views/login");
+			rMap.put("url", "/views/user/login");
 		}
 		
+		return rMap;
+	}
+
+	@Override
+	public Map<String, String> checkId(String uiId) {
+		Map<String, String> rMap = new HashMap<>();
+		rMap.put("msg", "이미 있는 아이디입니다.");
+		rMap.put("result", "false");
+		if(userInfoDao.selectUserInfoByUiId(uiId)==null) {
+			rMap.put("msg", "가입가능한 아이디 입니다.");
+			rMap.put("result", "true");
+		}
 		return rMap;
 	}
 
