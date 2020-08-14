@@ -159,3 +159,6 @@ begin
 	end loop;
 	close cur_address;
 end;
+
+
+디버깅 컨트롤 시프트 i;

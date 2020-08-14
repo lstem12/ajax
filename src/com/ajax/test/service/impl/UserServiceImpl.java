@@ -10,15 +10,21 @@ import com.ajax.test.service.UserService;
 public class UserServiceImpl implements UserService {
 	private UserinfoDAO userInfoDao = new UserinfoDAOImpl();
 	@Override
-	public Map<String, String> doLogin(Map<String, String> user) {
-		Map<String, String> rMap = new HashMap<>();
+	public Map<String, Object> doLogin(Map<String, String> user) {
+		Map<String, Object> rMap = new HashMap<>();
 		rMap.put("result", "fail");
 		rMap.put("msg", "아이디를 확인해주세요");
-		if("test".equals(user.get("id"))) {
+		String uiId = user.get("ui_id");
+		Map<String,Object> tmpUser = userInfoDao.selectUserInfoByUiId(uiId);
+		if(tmpUser != null) {
+			String tmpUiPassword = tmpUser.get("ui_password").toString();
+			String uiPassword = user.get("ui_password");
+			rMap.put("result", "fail");
 			rMap.put("msg", "비밀번호를 확인해주세요");
-			if("test".equals(user.get("pwd"))) {
+			if(tmpUiPassword.equals(uiPassword)) {
 				rMap.put("result", "ok");
 				rMap.put("msg", "로그인 완료");
+				rMap.put("user", tmpUser);
 			}
 		}
 		return rMap;

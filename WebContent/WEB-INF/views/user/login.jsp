@@ -28,8 +28,8 @@ function doLogin(){
 	var id = document.querySelector('#id').value;
 	var pwd = document.querySelector('#pwd').value;
 	var params = {
-			id : id,
-			pwd : pwd
+			ui_id : id,
+			ui_password : pwd
 	}
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', '/user/login');
